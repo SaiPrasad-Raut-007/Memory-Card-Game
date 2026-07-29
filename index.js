@@ -5,6 +5,12 @@ const CARDS = [
   "💖", "🍎", "⚪", "🌲", "🐦", "🟠", "🤢", "👾", "💖", "🍎", "⚪", "🌲", "🐦", "🟠", "🤢", "👾",
 ]
 
+let alt = 0;
+// Even for plater A and odd for player B
+let player_clicked = 0;
+let player_a_score = 0;
+let player_b_score = 0;
+
 function createBoard() {
   const board = document.getElementById("game-container");
   shuffle(CARDS);
@@ -46,6 +52,7 @@ function shuffle(array) {
 let selected_cards = [];
 
 function turnCard(x, y) {
+  player_clicked += 1;
   const cardElement = document.getElementById(`card-${x}-${y}`);
 
   cardElement.textContent = cardElement.dataset.card_info;
@@ -61,10 +68,15 @@ function turnCard(x, y) {
     const allCards = document.querySelectorAll('[data-card_info]');
     const matching = Array.from(allCards).filter(card => card.dataset.card_info === selected_cards[0]);
 
+    updateScore();
     matching.forEach((card) => {
       card.style.visibility = "hidden";
     })
     console.log(matching);
+  } else if (selected_cards.length >= 2) {
+    console.log("Did not find a match, moving on to the next player");
+    switchPlayer();
+
   }
 
   setTimeout(() => {
@@ -73,6 +85,7 @@ function turnCard(x, y) {
       selected_cards.splice(index, 1);
     }
     cardElement.textContent = "";
+    player_clicked -= 1;
   }, 1500)
 }
 
@@ -85,14 +98,43 @@ function checkCards(cards) {
   return false;
 }
 
+function switchPlayer() {
+  let playing_info = document.getElementById("player-playing");
+  alt += 1;
+
+  if (alt % 2 === 0) {
+    playing_info.textContent = "Player A's Turn";
+  } else {
+    playing_info.textContent = "Player B's Turn";
+  }
+}
+
+function updateScore() {
+  const score_board = document.getElementById("player-scores");
+  if (alt % 2 === 0) {
+    player_a_score += 1;
+  } else {
+    player_b_score += 1;
+  }
+
+  score_board.textContent = `Player A: ${player_a_score}, Player B: ${player_b_score}`;
+}
+
 function handleClick(event) {
     if (event.target.tagName !== "DIV" || !event.target.dataset.x || !event.target.dataset.y) return;
 
     const x = Number(event.target.dataset.x);
-    const y = Number(event.target.dataset.y);
+  const y = Number(event.target.dataset.y);
 
+  if (player_clicked <= 2) {
     turnCard(x, y);
+  }
 }
+
+let player_timer = setInterval(() => {
+  switchPlayer();
+}, 5000)
+
 
 document.addEventListener("click", (event) => handleClick(event))
 
