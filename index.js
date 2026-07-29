@@ -49,7 +49,12 @@ ws.onmessage = (event) => {
 
   else if (parseData.type === "TURN_CARD") {
     const cardElement = document.getElementById(`card-${parseData.x}-${parseData.y}`);
-    cardElement.textContent = parseData.card_info;
+
+    cardElement.classList.add("is-turning");
+
+    setTimeout(() => {
+      cardElement.textContent = parseData.card_info;
+    }, 200);
   }
 
   else if (parseData.type === "MATCH_FOUND") {
@@ -62,8 +67,19 @@ ws.onmessage = (event) => {
 
   else if (parseData.type === "NO_MATCH") {
     console.log("No match. Switching turns.");
-    document.getElementById(`card-${parseData.card1.x}-${parseData.card1.y}`).textContent = "";
-    document.getElementById(`card-${parseData.card2.x}-${parseData.card2.y}`).textContent = "";
+    const card1 = document.getElementById(`card-${parseData.card1.x}-${parseData.card1.y}`);
+    const card2 = document.getElementById(`card-${parseData.card2.x}-${parseData.card2.y}`);
+
+    card1.classList.add("is-turning");
+    card2.classList.add("is-turning");
+
+    setTimeout(() => {
+      card1.textContent = "";
+      card2.textContent = "";
+
+      card1.classList.remove("is-turning");
+      card2.classList.remove("is-turning");
+    }, 200);
 
     document.getElementById("player-playing").textContent = `Player ${parseData.nextTurn}'s Turn`;
   }

@@ -1,20 +1,49 @@
+body {
+    background-color: beige;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+
+}
+
 .card {
-    width: 50px;
-    height: 50px;
+    width: 200px;
+    height: 200px;
     border: 2px solid black;
     border-radius: 10px;
-    background-color: beige;
+    background-color: cornflowerblue;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    font-size: 24px;
+    font-size: 100px;
     margin-bottom: 2px;
     margin-right: 2px;
 }
 
+.card:hover {
+    transform: scale(1.02);
+    background-color: cadetblue;
+}
+
+.card.is-turning {
+    animation: isTurningAnimation 0.4s ease-in-out;
+}
+
+@keyframes isTurningAnimation {
+    0% {transform: scaleX(1);}
+    50% {transform: scaleX(0);}
+    100% {transform: scaleX(1);}
+}
+
 #game-container {
     display: grid;
-    grid-template-columns: repeat(4, 56px);
+    grid-template-columns: repeat(4, 206px);
 }
